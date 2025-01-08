@@ -47,7 +47,7 @@
             }
 
             try {
-                // تأكد من أنه يتم استدعاء طلب الأذونات من خلال حدث مستخدم (click)
+                // طلب ربط المحفظة
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 
                 if (accounts.length > 0) {
@@ -58,7 +58,6 @@
                     alert('لم يتم العثور على حسابات في محفظة MetaMask');
                 }
             } catch (error) {
-                // التعامل مع الأخطاء بشكل منظم
                 console.error('Error connecting to MetaMask:', error);
                 if (error.code === 4001) {
                     alert('تم رفض الاتصال بمحفظة MetaMask');
