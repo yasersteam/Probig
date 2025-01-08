@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ربط محفظة ميتاماسك</title>
+    <style>
+        body {
+            background-color: #2f2f2f;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>مرحبًا بك في صفحة ربط ميتاماسك</h1>
+    <button id="connectButton">ربط محفظة ميتاماسك</button>
+
+    <script>
+        // تحقق من وجود MetaMask
+        const checkMetaMaskAvailability = () => {
+            return typeof window.ethereum !== 'undefined';
+        };
+
+        // توصيل المحفظة
+        const connectMetaMask = async () => {
+            if (!checkMetaMaskAvailability()) {
+                alert('يرجى تثبيت MetaMask على جهازك أو فتح التطبيق');
+                window.location.href = "https://metamask.app.link/";
+                return;
+            }
+
+            try {
+                // تأكد من أنه يتم استدعاء طلب الأذونات من خلال حدث مستخدم (click)
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+                if (accounts.length > 0) {
+                    const account = accounts[0];
+                    alert(`تم ربط المحفظة بنجاح: ${account}`);
+                    console.log('Connected account:', account);
+                } else {
+                    alert('لم يتم العثور على حسابات في محفظة MetaMask');
+                }
+            } catch (error) {
+                // التعامل مع الأخطاء بشكل منظم
+                console.error('Error connecting to MetaMask:', error);
+                if (error.code === 4001) {
+                    alert('تم رفض الاتصال بمحفظة MetaMask');
+                } else {
+                    alert('حدث خطأ غير متوقع أثناء ربط المحفظة');
+                }
+            }
+        };
+
+        // إضافة حدث عند الضغط على الزر
+        document.getElementById('connectButton').onclick = connectMetaMask;
+
+        // التعامل مع تغييرات الحسابات والشبكة فقط إذا كانت MetaMask موجودة
+        if (checkMetaMaskAvailability()) {
+            window.ethereum.on('accountsChanged', (accounts) => {
+                if (accounts.length > 0) {
+                    alert(`تم تغيير الحساب إلى: ${accounts[0]}`);
+                }
+            });
+
+            window.ethereum.on('chainChanged', (chainId) => {
+                alert(`تم تغيير الشبكة إلى: ${chainId}`);
+                window.location.reload(); // إعادة تحميل الصفحة بعد تغيير الشبكة
+            });
+        }
+    </script>
+</body>
+</html>
