@@ -20,7 +20,6 @@
     const statusMessage = document.getElementById('statusMessage');
 
     async function connectWallet() {
-      // التحقق إذا كان MetaMask موجودًا
       if (typeof window.ethereum !== 'undefined') {
         try {
           // طلب الوصول إلى الحسابات
@@ -36,10 +35,12 @@
           statusMessage.textContent = 'تم إلغاء طلب الربط!';
         }
       } else {
-        // الانتقال إلى تطبيق MetaMask على الهاتف المحمول
+        // الانتقال إلى تطبيق MetaMask مع إعادة التوجيه بعد الربط
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         if (isMobile) {
-          window.location.href = 'https://metamask.app.link/dapp/https://yasersteam.github.io/Probig/';
+          // رابط التطبيق مع إعادة التوجيه بعد الربط
+          const redirectUrl = encodeURIComponent('https://yasersteam.github.io/Probig/'); // رابط موقعك بعد الربط
+          window.location.href = `https://metamask.app.link/dapp/${redirectUrl}`;
         } else {
           statusMessage.textContent = 'يرجى تثبيت MetaMask لاستخدام هذه الميزة.';
         }
